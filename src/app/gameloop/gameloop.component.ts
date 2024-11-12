@@ -81,6 +81,9 @@ export class GameloopComponent implements OnInit {
     this.interval = null;
     //saving the score
     localStorage.setItem('gameScore', JSON.stringify(this.score));
+    //saving the timer
+    localStorage.setItem('gameTimer', JSON.stringify(this.timer));
+    //saving the 
     //navigate to end screen
     this.router.navigate(['/endGame'])
   }

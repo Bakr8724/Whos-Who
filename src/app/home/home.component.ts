@@ -87,5 +87,10 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/game']);
   }
 
-
+  configuration(){
+    this.router.navigate(['/settings']);
+  }
+  leaderboard(){
+    this.router.navigate(['/leaderboard']);
+  }
 }
