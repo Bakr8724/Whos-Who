@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Howl } from 'howler';
 import fetchFromSpotify, { request } from 'src/services/api';
+import { GameService } from '../game.service';
 
 const AUTH_ENDPOINT = "https://nuod0t2zoe.execute-api.us-east-2.amazonaws.com/FT-Classroom/spotify-auth-token";
 const TOKEN_KEY = "whos-who-access-token";
@@ -13,17 +14,15 @@ const TOKEN_KEY = "whos-who-access-token";
 })
 export class GameloopComponent implements OnInit {
   
-  constructor(private router: Router) {}
+  constructor(private router: Router, private gameService: GameService) {}
   
   //hold the playlist songs with their preview urls
   songs: any[] = [];
   currentSongIndex: number = 0;
   player: Howl | null = null; //audio instance for playback
   token: string = ''; //spotify api access token
-  playBackDuration: number = 5; //hardcoded for now, 5 seconds of audio
   
   //game variables
-  replaysAvailable: number = 5;
   timer: number = 0;
   interval: any;
   choices: string[] = [];
@@ -34,13 +33,19 @@ export class GameloopComponent implements OnInit {
   isLastQuestion: boolean = false;
   questionIndex: number = 0;
   totalQuestions: number = 5;
-  Audiotimer: number = 5; //the duration of the song
+  totalCorrectAnswers: number = 0;
+  questionData: any[] = []; // Array to hold question data
   
-  gameMode: string = 'single';  // Default to single player
   playerScores: { [player: string]: number } = {}; // For coop mode
   currentPlayer: string = 'Player 1';  // Track current player
-  selectionMethod: string = 'artist'; 
-  questionData: any[] = []; // Array to hold question data
+  
+  
+  replaysAvailable: number = 5;
+  playBackDuration: number = 5; //hardcoded for now, 5 seconds of audio
+
+  gameMode: string = 'single';  // Default to single player
+  difficulty: string = 'easy';
+  selectBy: string = 'artist'; 
   
   
   hasPlayed: boolean = false; //tracker to make sure the song doesnt get replayed
@@ -48,38 +53,61 @@ export class GameloopComponent implements OnInit {
   //load token and the playlist songs, initializer.
   ngOnInit(): void {
     this.initializeTokenAndSongs();
-    // Retrieve configuration settings from localStorage
-    let difficulty = localStorage.getItem('difficulty') || 'easy';
-    let replays = parseInt(localStorage.getItem('replays') || '3', 10);
-    let playBackDuration = parseInt(localStorage.getItem('Audiotimer') || '5', 10);
-    this.selectionMethod = localStorage.getItem('selectionMethod') || 'artist'; 
-    this.gameMode = localStorage.getItem('gameMode') || 'single';  // Retrieve game mode
+    // // Retrieve configuration settings from localStorage
+    // let difficulty = localStorage.getItem('difficulty') || 'easy';
+    // let replays = parseInt(localStorage.getItem('replays') || '3', 10);
+    // let playBackDuration = parseInt(localStorage.getItem('Audiotimer') || '5', 10);
+    // this.selectionMethod = localStorage.getItem('selectionMethod') || 'artist'; 
+    // this.gameMode = localStorage.getItem('gameMode') || 'single';  // Retrieve game mode
     // console.log(this.gameMode);
     // console.log(this.selectionMethod);
     // console.log("audio timer: " + this.playBackDuration);
     // console.log(difficulty);
     // console.log(replays);
     
-    // Apply settings based on difficulty
-    if (difficulty === 'easy') {
-      this.playBackDuration = playBackDuration; // 5 seconds for easy
-      this.replaysAvailable = replays; // 3 replays for easy
-    } else if (difficulty === 'medium') {
-      this.playBackDuration = 3; // 3 seconds for medium
-      this.replaysAvailable = 2; // 2 replays for medium
-    } else if (difficulty === 'hard') {
-      this.playBackDuration = 1.5; // 1.5 seconds for hard
-      this.replaysAvailable = 1; // 1 replay for hard
-    }
+ 
+    this.gameConfiguration();
+
+
+       //Apply settings based on difficulty
+
     
     // Display initial settings on the screen (you can use this in the HTML)
-    console.log(`Game Mode: ${this.gameMode},Timer: ${this.Audiotimer}s, Replays: ${this.replaysAvailable}`);
+    //console.log(`Default Game Mode: ${this.gameMode},Timer: ${this.Audiotimer}s, Replays: ${this.replaysAvailable}`);
     
     // Display the selection method (Artist or Album)
     this.loadQuestions();
   }
   
-  
+  gameConfiguration(){
+
+    const configSettings = this.gameService.getConfigResults();
+    console.log('New Game Mode:', configSettings);
+    if(configSettings){
+      this.gameMode = configSettings.gameMode;
+      this.difficulty = configSettings.difficulty;
+      this.selectBy = configSettings.selectBy;
+      console.log("Game Mode:", this.gameMode)
+      console.log("Difficulty:", this.difficulty)
+      console.log("SelectBy:", this.selectBy)
+
+      //setting duration and replays available
+      if (this.difficulty === "easy") {
+        this.playBackDuration = 5; // 5 seconds for easy
+        this.replaysAvailable = 3; // 3 replays for easy
+      } else if (this.difficulty === "medium") {
+        this.playBackDuration = 3; // 3 seconds for medium
+        this.replaysAvailable = 2; // 2 replays for medium
+      } else if (this.difficulty === 'hard') {
+        this.playBackDuration = 1.5; // 1.5 seconds for hard
+        this.replaysAvailable = 1; // 1 replay for hard
+      }
+    }else{
+      console.log('No config settings found in local storage');
+    }
+
+
+  }
   
   //retrieve the stored token or get a new one, then load playlist
   async initializeTokenAndSongs() {
@@ -178,6 +206,7 @@ export class GameloopComponent implements OnInit {
     console.log("Selected choice:", choice, " | correct choice:", this.correctChoice);
     if (choice === this.correctChoice) {
       this.score++;
+      this.totalCorrectAnswers++;
       console.log("correct answer, score is: ", this.score);
     }else{
       console.log("wrong answer :(");
@@ -341,8 +370,13 @@ export class GameloopComponent implements OnInit {
     }
 
     clearInterval(this.interval);
-    localStorage.setItem('gameScore', JSON.stringify(this.score));
-    localStorage.setItem('gameTimer', JSON.stringify(this.timer));
+    this.gameService.setGameResults(
+      this.timer,
+      this.totalCorrectAnswers,
+      this.totalQuestions,
+      this.score,
+      
+    );
     this.router.navigate(['/endGame']);
   }
 }

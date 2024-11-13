@@ -1,20 +1,30 @@
 import { Injectable } from '@angular/core';
-
+import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
 
   
-  totalTime: string = '00:00';
+  totalTime: number = 0;
   correctAnswers: number = 0;
   totalQuestions: number = 0;
   score: number = 0;
 
+  gameMode: string = '';
+  difficulty: string = '';
+  selectBy: string = '';
+
+  configForm = new FormGroup({
+    gameMode: new FormControl('gameMode'),
+    difficulty: new FormControl('difficulty'),
+    selectBy: new FormControl('selectBy'),
+  });
+
   constructor() { }
 
   // saves to local storage;
-  setGameResults(totalTime: string, correctAnswers: number, totalQuestions: number, score: number): void {
+  setGameResults(totalTime: number, correctAnswers: number, totalQuestions: number, score: number): void {
     this.totalTime = totalTime;
     this.correctAnswers = correctAnswers;
     this.totalQuestions = totalQuestions;
@@ -36,11 +46,7 @@ export class GameService {
     const storedResults = localStorage.getItem('gameResults');
     if (storedResults) {
       const { totalTime, correctAnswers, totalQuestions, score } = JSON.parse(storedResults);
-      this.totalTime = totalTime;
-      this.correctAnswers = correctAnswers;
-      this.totalQuestions = totalQuestions;
-      this.score = score;
-      return { totalTime, correctAnswers, totalQuestions, score };
+      return JSON.parse(storedResults);
     }
     return null;
   }
@@ -70,4 +76,29 @@ export class GameService {
     // Store the updated leaderboard in localStorage
     localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
   }
+
+  //method to set configuration
+  setConfigResults(gameMode: string, difficulty: string, selectBy: string): void{
+    this.gameMode = gameMode;
+    this.difficulty = difficulty;
+    this.selectBy = selectBy;
+
+    const configResults = {
+      gameMode: this.gameMode,
+      difficulty: this.difficulty,
+      selectBy: this.selectBy,
+    };
+    localStorage.setItem('configResults', JSON.stringify(configResults));
+  }
+  //method to get configuration
+  getConfigResults(): {gameMode: string, difficulty: string, selectBy: string} | null {{
+    const storedResults = localStorage.getItem('configResults');
+    if(storedResults){
+      const{gameMode, difficulty, selectBy} = JSON.parse(storedResults);
+      return JSON.parse(storedResults);
+    }
+    return null;
+
+  }}
+
 }

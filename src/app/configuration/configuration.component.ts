@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-configuration',
@@ -9,8 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./configuration.component.css']
 })
 export class ConfigurationComponent implements OnInit {
-  gameMode: string = '';    // Default value
-  difficulty: string = '';    // Default value
+  gameMode: string = 'single';    // Default value
+  difficulty: string = 'easy';    // Default value
   selectBy: string = 'artist';   // Default value
   
   configForm = new FormGroup({
@@ -18,7 +18,7 @@ export class ConfigurationComponent implements OnInit {
     difficulty: new FormControl('difficulty'),
     selectBy: new FormControl('selectBy'),
   });
-  constructor(private router: Router) {}
+  constructor(private router: Router, private gameService: GameService) {}
 
   ngOnInit(): void {
     const savedConfig = JSON.parse(localStorage.getItem('gameConfig') || '{}');
@@ -37,8 +37,14 @@ export class ConfigurationComponent implements OnInit {
         difficulty: this.configForm.get('difficulty'), 
         selectBy: this.configForm.get('selectBy')
       };
+
       console.log(this.configForm.value);
-      localStorage.setItem('gameConfig', JSON.stringify(this.configForm.value));
+      this.gameService.setConfigResults(
+        JSON.stringify(this.configForm.value.gameMode),
+        JSON.stringify(this.configForm.value.difficulty),
+        JSON.stringify(this.configForm.value.selectBy)
+      )
+      console.log(this.configForm.value.gameMode);
       alert('Configuration Saved!');
 
       this.router.navigate(['/']);
