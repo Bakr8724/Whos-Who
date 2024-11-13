@@ -9,8 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./configuration.component.css']
 })
 export class ConfigurationComponent implements OnInit {
-  gameMode: string = 'single';    // Default value
-  difficulty: string = 'easy';    // Default value
+  gameMode: string = '';    // Default value
+  difficulty: string = '';    // Default value
   selectBy: string = 'artist';   // Default value
   
   configForm = new FormGroup({
