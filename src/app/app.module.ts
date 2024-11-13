@@ -8,20 +8,21 @@ import { HomeComponent } from "./home/home.component";
 import { EndMenuComponent } from './end-menu/end-menu.component';
 import { GameloopComponent } from './gameloop/gameloop.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
-import { LeaderBoardComponent } from './leader-board/leader-board.component';
+import { LeaderboardComponent } from './leader-board/leader-board.component';
+import { GameService } from "./game.service";
 
 const routes: Routes = [
   {path: "", component: HomeComponent }, 
   {path: "game", component:GameloopComponent},
   {path: "endGame", component:EndMenuComponent},
   { path: "settings", component: ConfigurationComponent },
-  { path: 'leaderboard', component: LeaderBoardComponent }
+  { path: 'leaderboard', component: LeaderboardComponent }
 ];
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, EndMenuComponent, GameloopComponent, ConfigurationComponent, LeaderBoardComponent],
+  declarations: [AppComponent, HomeComponent, EndMenuComponent, GameloopComponent, ConfigurationComponent, LeaderboardComponent],
   imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes), ReactiveFormsModule],
-  providers: [],
+  providers: [GameService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

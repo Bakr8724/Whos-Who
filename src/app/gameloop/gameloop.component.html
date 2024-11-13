@@ -1,25 +1,33 @@
 <div class="game-container">
-
-    <div class="replays">Replays Available: {{replaysAvailable}}</div>
   
-
-    <div class="timer">Time: {{timer}} sec</div>
-  
-
-    <div class="song-clip">
-      <button (click)="playAudio()">Play</button>
-      <div>Some song</div>
-      <button (click)="pauseAudio()">Pause</button>
-      <button (click)="replayAudio()">Replay</button>
-    </div>
-  
-
-    <div class="choices" *ngIf="showChoices">
-      <button *ngFor="let choice of choices" (click)="selectChoice(choice)" [ngClass]="{'selected': selectedChoice === choice}">{{choice}}</button>
-    </div>
-  
-
-    <button class="next-button" *ngIf="showChoices && !isLastQuestion" (click)="nextQuestion()">Next</button>
-    <button class="complete-button" *ngIf="showChoices && isLastQuestion" (click)="completeGame()">Complete</button>
+  <div class="game-mode">Game Mode: {{gameMode === 'single' ? 'Single Player' : 'Cooperative'}}</div>
+  <div *ngIf="gameMode === 'coop'">
+    <div>Current Player: {{currentPlayer}}</div>
+    <div>Player 1 Score: {{playerScores['Player 1'] || 0}}</div>
+    <div>Player 2 Score: {{playerScores['Player 2'] || 0}}</div>
   </div>
-  
+
+  <div class="replays">Replays Available: {{ replaysAvailable }}</div>
+  <div class="timer">Time: {{ timer }} sec</div>
+
+  <div class="song-clip">
+    <button (click)="playAudio(currentSongIndex)">Play</button>
+    <div>{{ songs[currentSongIndex]?.name || 'Loading...' }}</div>
+    <button (click)="pauseAudio()">Pause</button>
+    <button (click)="replayAudio()">Replay</button>
+  </div>
+
+  <div class="audio-visualization" *ngIf="player && player.playing()">
+    <!-- need to display the audio visualization, placeholder for now.-->
+    <div class="bar" *ngFor="let bar of [].constructor(10)"></div>
+  </div>
+
+  <div class="choices" *ngIf="showChoices">
+    <button *ngFor="let choice of choices" (click)="selectChoice(choice)" [ngClass]="{ 'selected': selectedChoice === choice }">
+      {{ choice }}
+    </button>
+  </div>
+
+  <button class="next-button" *ngIf="showChoices && !isLastQuestion" (click)="nextQuestion()">Next</button>
+  <button class="complete-button" *ngIf="showChoices && isLastQuestion" (click)="completeGame()">Complete</button>
+</div>

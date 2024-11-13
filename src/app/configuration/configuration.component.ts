@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class ConfigurationComponent implements OnInit {
     difficulty: new FormControl('difficulty'),
     selectBy: new FormControl('selectBy'),
   });
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     const savedConfig = JSON.parse(localStorage.getItem('gameConfig') || '{}');
@@ -38,5 +40,8 @@ export class ConfigurationComponent implements OnInit {
       console.log(this.configForm.value);
       localStorage.setItem('gameConfig', JSON.stringify(this.configForm.value));
       alert('Configuration Saved!');
-    }
+
+      this.router.navigate(['/']);
+      
+}
 }

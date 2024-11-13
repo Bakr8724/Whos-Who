@@ -1,19 +1,22 @@
 <div class="end-menu">
-    <div class="totalTime">Total Time: mm:ss</div>
-
-    <div class="result">Correct Answers: 2/5</div>
-
-    <div class="totalScore">Score: 4</div>
-
+    <div class="totalTime">Total Time: {{ totalTime }}</div> <!-- Bind to totalTime property -->
+  
+    <div class="result">
+      Correct Answers: {{ correctAnswers }}/{{ totalQuestions }}
+    </div> <!-- Bind to correctAnswers and totalQuestions -->
+  
+    <div class="totalScore">Score: {{ score }}</div> <!-- Bind to score property -->
+  
     <div class="userInfo">
-        Enter your name:
-
-    </div>
-
+        <label for="playerName">Enter your name:</label>
+        <div class="input-container">
+          <input [(ngModel)]="playerName" id="playerName" placeholder="Your Name" />
+          <button (click)="submitName()" class="submit-button">Submit</button>
+        </div>
+      </div>
+      
     <div class="buttons">
-        <button>LeaderBoard</button>
-        <button>Main Menu</button>
-        <button>Play Again</button>
+        <button (click)="goToLeaderboard()">LeaderBoard</button>
+        <button (click)="goToMainMenu()">Main Menu</button>
+        <button (click)="playAgain()">Play Again</button>
     </div>
-
-</div>
