@@ -12,15 +12,15 @@ html, body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
+    width: 100vw;
+    height: 100vh; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-color: #008080; /* Teal background */
-    overflow: hidden; /* Prevents scrolling */
+    background-color: #008080;
+    overflow: hidden;
     
 }
 
@@ -29,14 +29,21 @@ html, body {
     top: 20px;
     left: 200px;
     font-size: 16px;
-    color: #f5f5dc; /* Beige text color */
+    color: #f5f5dc; 
 }
 .replays {
     position: absolute;
     top: 20px;
     left: 20px;
     font-size: 16px;
-    color: #f5f5dc; /* Beige text color */
+    color: #f5f5dc; 
+}
+.TotalQuestions{
+    position: absolute;
+    top: 20px;
+    left: 450px;
+    font-size: 16px;
+    color: #f5f5dc; 
 }
 
 
@@ -101,7 +108,7 @@ html, body {
 }
 
 .choices button:hover {
-    background-color: #005f5f; /* Darker teal on hover */
+    background-color: #005f5f;
 }
   
 

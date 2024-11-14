@@ -1,3 +1,4 @@
+
 <div class="game-container">
   
   <div class="game-mode">Game Mode: {{gameMode === 'single' ? 'Single Player' : 'Cooperative'}}</div>
@@ -7,6 +8,7 @@
 
   <div class="replays">Replays Available: {{ replaysAvailable }}</div>
   <div class="timer">Time: {{ timer }} sec</div>
+  <div class="TotalQuestions">Questions: {{questionIndex+1}}   / {{ totalQuestions }}</div>
 
   <div class="song-clip">
     <button (click)="playAudio(currentSongIndex)" [disabled]="!canPlay()" (click)="resumeAudio()">Play</button>
