@@ -1,5 +1,6 @@
 .leaderboard-page {
     padding: 20px;
+    background-color: #f5f5dc; /* Beige background */
     
   }
   
@@ -7,6 +8,7 @@
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 128, 128, 0.1); /* Teal shadow */
   }
   
   .leaderboard-table th,
@@ -17,8 +19,13 @@
   }
   
   .leaderboard-table th {
-    background-color: #f4f4f4;
+    background-color: #e0f7f7; /* Light teal for header background */
+    color: #333; /* Dark color for readability */
   }
+  .leaderboard-table td {
+    background-color: #fff; /* White background for rows */
+    color: #333; /* Dark color for readability */
+}
   
   .back-button {
     text-align: center;
@@ -26,13 +33,13 @@
   
   button {
     padding: 10px 20px;
-    background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    background-color: #008080; /* Teal for button */
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #006666; /* Darker teal on hover */
   }

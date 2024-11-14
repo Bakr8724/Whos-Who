@@ -3,8 +3,6 @@
   <div class="game-mode">Game Mode: {{gameMode === 'single' ? 'Single Player' : 'Cooperative'}}</div>
   <div *ngIf="gameMode === 'coop'">
     <div>Current Player: {{currentPlayer}}</div>
-    <div>Player 1 Score: {{playerScores['Player 1'] || 0}}</div>
-    <div>Player 2 Score: {{playerScores['Player 2'] || 0}}</div>
   </div>
 
   <div class="replays">Replays Available: {{ replaysAvailable }}</div>

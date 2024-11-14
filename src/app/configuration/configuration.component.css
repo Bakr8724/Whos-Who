@@ -3,8 +3,11 @@
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-  }
+    border-radius: 8px; background-color: #f5f5dc; /* Beige background */
+    box-shadow: 0 4px 8px rgba(0, 128, 128, 0.1); /* Teal shadow */
+}
+
+  
   
   .form-group {
     margin-bottom: 15px;
@@ -13,9 +16,23 @@
   label {
     display: block;
     margin-bottom: 5px;
+    color: #333; /* Dark text for readability */
   }
   
   select, button {
     width: 100%;
     padding: 8px;
+    background-color: #e0f7f7; /* Light teal for select background */
+    color: #333; /* Dark color for readability */
   }
+  button {
+    background-color: #008080; /* Teal for button */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #006666; /* Darker teal on hover */
+}
