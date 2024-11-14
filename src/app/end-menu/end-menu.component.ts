@@ -12,6 +12,9 @@ export class EndMenuComponent implements OnInit {
   totalQuestions: number = 0;
   score: number = 0;
   playerName: string = '';
+  isTwoPlayers: boolean = false;
+  player1Name: string = '';
+  player2Name: string = '';
   constructor(private router: Router, private gameService: GameService) {}
 
   ngOnInit(): void {
@@ -19,6 +22,11 @@ export class EndMenuComponent implements OnInit {
      // Retrieve session data from GameService
      const results = this.gameService.getGameResults();
      console.log('Retrieved results:', results); // Log to verify retrieval
+
+     let configurations = this.gameService.getConfigResults();
+     this.isTwoPlayers = configurations?.gameMode === "coop";
+
+
      if (results) {
        this.totalTime = results.totalTime;
        this.correctAnswers = results.correctAnswers;
@@ -37,6 +45,19 @@ export class EndMenuComponent implements OnInit {
       this.router.navigate(['/leaderboard']);
     } else {
       alert("Please enter your name!");
+    }
+  }
+
+
+  submitTwoPlayers(): void {
+    if (this.player1Name && this.player2Name) {
+      // Call the service to add the result to the leaderboard
+      this.gameService.addToLeaderboard(this.player1Name, this.score, this.totalTime);
+      this.gameService.addToLeaderboard(this.player2Name, this.score, this.totalTime);
+      // Navigate to the leaderboard after submission
+      this.router.navigate(['/leaderboard']);
+    } else {
+      alert("Please enter players' names!");
     }
   }
 

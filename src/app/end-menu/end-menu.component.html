@@ -1,4 +1,4 @@
-<div class="end-menu">
+<div class="end-menu"  *ngIf="!isTwoPlayers">
     <div class="totalTime">Total Time: {{ totalTime }}</div> <!-- Bind to totalTime property -->
   
     <div class="result">
@@ -20,3 +20,35 @@
         <button (click)="goToMainMenu()">Main Menu</button>
         <button (click)="playAgain()">Play Again</button>
     </div>
+</div>
+
+<div class="end-menu" *ngIf="isTwoPlayers">
+  <div class="totalTime">Total Time: {{ totalTime }}</div> <!-- Bind to totalTime property -->
+
+  <div class="result">
+    Correct Answers: {{ correctAnswers }}/{{ totalQuestions }}
+  </div> <!-- Bind to correctAnswers and totalQuestions -->
+
+  <div class="totalScore">Score: {{ score }}</div> <!-- Bind to score property -->
+  <div class="userInfo">
+    <label for="playerName">Enter player 1's name:</label>
+    <div class="input-container">
+      <input [(ngModel)]="player1Name" id="player1Name" placeholder="Your Name" />
+    </div>
+  </div>
+    
+  <div class="totalScore">Score: {{ score }}</div> <!-- Bind to score property -->
+  <div class="userInfo">
+    <label for="playerName">Enter player 2's name:</label>
+    <div class="input-container">
+      <input [(ngModel)]="player2Name" id="player2Name" placeholder="Your Name" />
+      <button (click)="submitTwoPlayers()" class="submit-button">Submit</button>
+    </div>
+  </div>
+
+  <div class="buttons">
+      <button (click)="goToLeaderboard()">LeaderBoard</button>
+      <button (click)="goToMainMenu()">Main Menu</button>
+      <button (click)="playAgain()">Play Again</button>
+  </div>
+</div>
