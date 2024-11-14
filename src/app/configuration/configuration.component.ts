@@ -39,15 +39,20 @@ export class ConfigurationComponent implements OnInit {
       };
 
       console.log(this.configForm.value);
-      this.gameService.setConfigResults(
-        JSON.stringify(this.configForm.value.gameMode),
-        JSON.stringify(this.configForm.value.difficulty),
-        JSON.stringify(this.configForm.value.selectBy)
-      )
-      console.log(this.configForm.value.gameMode);
+      if(this.configForm.value.gameMode && this.configForm.value.difficulty && this.configForm.value.selectBy){
+        this.gameService.setConfigResults(
+          this.configForm.value.gameMode,
+          this.configForm.value.difficulty,
+          this.configForm.value.selectBy
+        )
+        console.log(this.configForm.value.gameMode);
+      }else{        
+        this.gameService.setConfigResults(
+        this.gameMode,
+        this.difficulty,
+        this.selectBy)
+      }
       alert('Configuration Saved!');
-
-      this.router.navigate(['/']);
-      
+      this.router.navigate(['/game']);
 }
 }

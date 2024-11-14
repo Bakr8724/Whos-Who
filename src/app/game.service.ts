@@ -82,6 +82,7 @@ export class GameService {
     this.gameMode = gameMode;
     this.difficulty = difficulty;
     this.selectBy = selectBy;
+    console.log("diffuctly" + difficulty);
 
     const configResults = {
       gameMode: this.gameMode,

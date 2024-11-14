@@ -87,15 +87,17 @@ export class GameloopComponent implements OnInit {
       this.gameMode = configSettings.gameMode;
       this.difficulty = configSettings.difficulty;
       this.selectBy = configSettings.selectBy;
-      console.log("Game Mode:", this.gameMode)
-      console.log("Difficulty:", this.difficulty)
-      console.log("SelectBy:", this.selectBy)
+      console.log("Game Mode:", this.gameMode);
+      console.log("Difficulty:", this.difficulty);
+      console.log("SelectBy:", this.selectBy);
+      console.log(`Here gameConfiguration() difficulty: ${this.difficulty}`);
 
       //setting duration and replays available
       if (this.difficulty === "easy") {
         this.playBackDuration = 5; // 5 seconds for easy
         this.replaysAvailable = 3; // 3 replays for easy
       } else if (this.difficulty === "medium") {
+        console.log("Here in medium");
         this.playBackDuration = 3; // 3 seconds for medium
         this.replaysAvailable = 2; // 2 replays for medium
       } else if (this.difficulty === 'hard') {
