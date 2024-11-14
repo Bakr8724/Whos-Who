@@ -1,30 +1,33 @@
-<div class="leaderboard-page">
-    <h2>Leaderboard</h2>
+
+<div class="backgroundstuff">
+  <div class="leaderboard-page">
+      <h2>Leaderboard</h2>
+      
+      <div class="leaderboard-table">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Player</th>
+              <th>Score</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Example leaderboard entry -->
+            <tr *ngFor="let entry of leaderboard; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ entry.playerName }}</td>
+              <td>{{ entry.score }}</td>
+              <td>{{ entry.totalTime }}</td>
+            </tr>
+            <!-- Additional rows can be added dynamically from a component -->
+          </tbody>
+        </table>
+      </div>
     
-    <div class="leaderboard-table">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Player</th>
-            <th>Score</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Example leaderboard entry -->
-          <tr *ngFor="let entry of leaderboard; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ entry.playerName }}</td>
-            <td>{{ entry.score }}</td>
-            <td>{{ entry.totalTime }}</td>
-          </tr>
-          <!-- Additional rows can be added dynamically from a component -->
-        </tbody>
-      </table>
-    </div>
-  
-    <div class="back-button">
-      <button (click)="goToMainMenu()">Main Menu</button>
-    </div>
+      <div class="back-button">
+        <button (click)="goToMainMenu()">Main Menu</button>
+      </div>
   </div>
+</div>

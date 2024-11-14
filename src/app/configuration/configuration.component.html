@@ -1,35 +1,38 @@
-<div class="configuration-page">
-  <h2>Game Configuration</h2>
-  <form [formGroup]="configForm">
-    <!-- Game Mode -->
-    <div class="form-group">
-      <label for="gameMode">Game Mode</label>
-      <select formControlName="gameMode" id="gameMode">
-        <option value="single">Single Player</option>
-        <option value="coop">Cooperative (Co-op)</option>
-      </select>
-    </div>
 
-    <!-- Difficulty -->
-    <div class="form-group">
-      <label for="difficulty">Difficulty</label>
-      <select formControlName="difficulty" id="difficulty">
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-      </select>
-    </div>
+<div class="backgroundstuff">
+  <div class="configuration-page">
+    <h2>Game Configuration</h2>
+    <form [formGroup]="configForm">
+      <!-- Game Mode -->
+      <div class="form-group">
+        <label for="gameMode">Game Mode</label>
+        <select formControlName="gameMode" id="gameMode">
+          <option value="single">Single Player</option>
+          <option value="coop">Cooperative (Co-op)</option>
+        </select>
+      </div>
 
-    <!-- Select By -->
-    <div class="form-group">
-      <label for="selectBy">Select By</label>
-      <select formControlName="selectBy" id="selectBy">
-        <option value="artist">Artist</option>
-        <option value="album">Album</option>
-      </select>
-    </div>
+      <!-- Difficulty -->
+      <div class="form-group">
+        <label for="difficulty">Difficulty</label>
+        <select formControlName="difficulty" id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
 
-    <!-- Save Configuration -->
-    <button (click)="saveConfiguration()" type="button">Save Settings</button>
-  </form>
+      <!-- Select By -->
+      <div class="form-group">
+        <label for="selectBy">Select By</label>
+        <select formControlName="selectBy" id="selectBy">
+          <option value="artist">Artist</option>
+          <option value="album">Album</option>
+        </select>
+      </div>
+
+      <!-- Save Configuration -->
+      <button (click)="saveConfiguration()" type="button">Save Settings</button>
+    </form>
+  </div>
 </div>

@@ -1,24 +1,30 @@
-/* Style the home-page container to cover the whole viewport */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .home-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 20px;
-  width: 100%;
-  height: 100vh; /* Full viewport height */
-  background-image: url('/assets/images/images.jpeg');
-  background-size: cover;       /* This makes the image cover the entire area */
-  background-position: center;   /* Centers the image */
-  background-repeat: no-repeat;  /* Prevents the image from repeating */
-  background-attachment: fixed;  /* Keeps the background fixed during scroll */
+  background-color: #008080; /* Teal background */
+  overflow: hidden; /* Prevents scrolling */
+  
 }
 
 h1 {
   font-size: 2.5em;
   margin-bottom: 20px;
-  color: #fff; /* Adjust text color for contrast against background */
+  color: #f5f5dc; /* Beige text color for contrast */
 }
 
 .navigation-buttons button {
@@ -27,7 +33,7 @@ h1 {
   padding: 10px 20px;
   font-size: 1.2em;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent for better visibility */
+  background-color: rgba(245, 245, 220, 0.9); /* Beige button with slight transparency */
   border: none;
   border-radius: 5px;
   color: #333;

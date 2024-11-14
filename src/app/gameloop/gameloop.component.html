@@ -1,20 +1,20 @@
+
 <div class="game-container">
   
   <div class="game-mode">Game Mode: {{gameMode === 'single' ? 'Single Player' : 'Cooperative'}}</div>
   <div *ngIf="gameMode === 'coop'">
     <div>Current Player: {{currentPlayer}}</div>
-    <div>Player 1 Score: {{playerScores['Player 1'] || 0}}</div>
-    <div>Player 2 Score: {{playerScores['Player 2'] || 0}}</div>
   </div>
 
   <div class="replays">Replays Available: {{ replaysAvailable }}</div>
   <div class="timer">Time: {{ timer }} sec</div>
+  <div class="TotalQuestions">Questions: {{questionIndex+1}}   / {{ totalQuestions }}</div>
 
   <div class="song-clip">
-    <button (click)="playAudio(currentSongIndex)">Play</button>
+    <button (click)="playAudio(currentSongIndex)" [disabled]="!canPlay()" (click)="resumeAudio()">Play</button>
     <div>{{ songs[currentSongIndex]?.name || 'Loading...' }}</div>
-    <button (click)="pauseAudio()">Pause</button>
-    <button (click)="replayAudio()">Replay</button>
+    <button (click)="pauseAudio()" >Pause</button>
+    <button (click)="replayAudio()" [disabled]="replaysAvailable <= 0">Replay</button>
   </div>
 
   <div class="audio-visualization" *ngIf="player && player.playing()">

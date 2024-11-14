@@ -35,6 +35,8 @@ export class GameloopComponent implements OnInit {
   totalQuestions: number = 5;
   totalCorrectAnswers: number = 0;
   questionData: any[] = []; // Array to hold question data
+  playDisabled: boolean = false;
+  isPaused: boolean = false;
   
   playerScores: { [player: string]: number } = {}; // For coop mode
   currentPlayer: string = 'Player 1';  // Track current player
@@ -46,36 +48,16 @@ export class GameloopComponent implements OnInit {
   gameMode: string = 'single';  // Default to single player
   difficulty: string = 'easy';
   selectBy: string = 'artist'; 
-  
+  addedScore: boolean = false;
   
   hasPlayed: boolean = false; //tracker to make sure the song doesnt get replayed
   
   //load token and the playlist songs, initializer.
   ngOnInit(): void {
     this.initializeTokenAndSongs();
-    // // Retrieve configuration settings from localStorage
-    // let difficulty = localStorage.getItem('difficulty') || 'easy';
-    // let replays = parseInt(localStorage.getItem('replays') || '3', 10);
-    // let playBackDuration = parseInt(localStorage.getItem('Audiotimer') || '5', 10);
-    // this.selectionMethod = localStorage.getItem('selectionMethod') || 'artist'; 
-    // this.gameMode = localStorage.getItem('gameMode') || 'single';  // Retrieve game mode
-    // console.log(this.gameMode);
-    // console.log(this.selectionMethod);
-    // console.log("audio timer: " + this.playBackDuration);
-    // console.log(difficulty);
-    // console.log(replays);
-    
- 
+
     this.gameConfiguration();
 
-
-       //Apply settings based on difficulty
-
-    
-    // Display initial settings on the screen (you can use this in the HTML)
-    //console.log(`Default Game Mode: ${this.gameMode},Timer: ${this.Audiotimer}s, Replays: ${this.replaysAvailable}`);
-    
-    // Display the selection method (Artist or Album)
     this.loadQuestions();
   }
   
@@ -148,8 +130,10 @@ export class GameloopComponent implements OnInit {
 
   
   //get the songs from the spotify playlist, filter the songs using their previewUrl, and then shuffle them.
+  //Today's Top Hits: https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=d6b96150eca8454c
+  //Hot Hits USA: https://open.spotify.com/playlist/37i9dQZF1DX0kbJZpiYdZl?si=a3ff6be02ab84ae9
   async loadPlaylistSongs() {
-    const playlistId = '37i9dQZF1DXcBWIGoYBM5M'; // Hot Hits USA
+    const playlistId = '37i9dQZF1DX0kbJZpiYdZl'; // Hot Hits USA
     const endpoint = `playlists/${playlistId}/tracks`;
     try {
       const response = await fetchFromSpotify({ token: this.token, endpoint });
@@ -159,6 +143,7 @@ export class GameloopComponent implements OnInit {
       .map((item: any) => ({
         name: item.track.name,
         artist: item.track.artists[0].name,
+        album: item.track.album.name,
         previewUrl: item.track.preview_url,
       }))
       .filter((song: { previewUrl: null; }) => song.previewUrl !== null);
@@ -206,9 +191,10 @@ export class GameloopComponent implements OnInit {
   selectChoice(choice: string) {
     this.selectedChoice = choice;
     console.log("Selected choice:", choice, " | correct choice:", this.correctChoice);
-    if (choice === this.correctChoice) {
+    if (choice === this.correctChoice && !this.addedScore) {
       this.score++;
       this.totalCorrectAnswers++;
+      this.addedScore = true;
       console.log("correct answer, score is: ", this.score);
     }else{
       console.log("wrong answer :(");
@@ -239,6 +225,7 @@ export class GameloopComponent implements OnInit {
       this.showChoices = true;
     }
     
+    this.playDisabled = true;
     // initialize Howler with the selected song preview
     this.player = new Howl({
       src: [song.previewUrl],
@@ -247,6 +234,7 @@ export class GameloopComponent implements OnInit {
       
       onend: () => {
         this.hasPlayed = false; // reset play state when song ends
+        this.isPaused = false;
       }
     });
     this.player.play();
@@ -260,15 +248,32 @@ export class GameloopComponent implements OnInit {
       }
     }, this.playBackDuration * 1000);
     
-    //disable the play button after the first play
     
   }
-  
+
+  canPlay(): boolean {
+    return !this.hasPlayed || this.isPaused;
+  }
+
   //pausing audio if its being played
   pauseAudio() {
     if (this.player && this.player.playing()) {
       this.player.pause();
+      this.isPaused = true;
     }
+
+  }
+  //WIP
+  resumeAudio(){
+    if(this.player && this.isPaused){
+      this.player.play();
+      this.isPaused = false;
+    }
+    setTimeout(() => {
+      if(this.player && this.player.playing()){
+        this.player.stop();
+      }
+    }, this.playBackDuration * 1000);
   }
   
   //as long as the replay available is more than 0 it replays, else it shouldnt. also -- replays
@@ -278,13 +283,19 @@ export class GameloopComponent implements OnInit {
       this.player.stop();
       this.player.play();
     }
+
+    setTimeout(() => {
+      if(this.player && this.player.playing()){
+        this.player.stop();
+      }
+    }, this.playBackDuration * 1000);
   }
 
 
 
   loadQuestions(): void {
     // Load the question data based on selection method (Artist or Album)
-    //if (this.selectionMethod === 'artist') {
+    if (this.selectBy === 'artist') {
       
       //check if the songs are loaded
       if(this.songs.length > 0 && this.currentSongIndex < this.songs.length){
@@ -305,16 +316,29 @@ export class GameloopComponent implements OnInit {
         this.correctChoice = correctArtist;
         this.showChoices = true;
   
-      } else {
-        console.error("no song found :(")
       }
+
+    }
+    else if (this.selectBy === 'album') {
+      if(this.songs.length > 0 && this.currentSongIndex < this.songs.length){
+        const currentSong = this.songs[this.currentSongIndex];
+        const correctAlbum = currentSong.album;
   
-      //} else if (this.selectionMethod === 'album') {
-      // Load album-related questions (dummy data for now)
-      // this.questionData = [
-      //   { question: 'Which album does this song belong to?', answer: 'Album X', options: ['Album X', 'Album Y', 'Album Z', 'Album A'] },
-      //   { question: 'Which album is this song from?', answer: 'Album Y', options: ['Album X', 'Album Y', 'Album Z', 'Album A'] }
-      // ];
+        //get other artist names not including the correct one
+        const otherAlbums = this.songs
+          .map(song => song.album)
+          .filter(album => album != correctAlbum);
+        
+        //pick three random artists
+        const shuffledOtherAlbums = this.shuffleSongs(otherAlbums);
+        const randomAlbum = shuffledOtherAlbums.slice(0,3);
+  
+        //combine correct artist with other random artists, shuffle them, and set choices
+        this.choices = this.shuffleSongs([correctAlbum, ...randomAlbum]);
+        this.correctChoice = correctAlbum;
+        this.showChoices = true;
+      }
+    }
   
  
   }
@@ -341,25 +365,27 @@ export class GameloopComponent implements OnInit {
       this.player.stop();
       this.player = null;
     }
-    
+    this.addedScore = false;
     this.questionIndex++;
     this.selectedChoice = '';
-    this.showChoices = false;
-    this.replaysAvailable = 5;
+    this.showChoices = true;
     this.hasPlayed = false;
+    this.playDisabled = false;
     
     // Switch player in coop mode after each question
     if (this.gameMode === 'coop') {
       this.currentPlayer = this.currentPlayer === 'Player 1' ? 'Player 2' : 'Player 1';
     }
+
+
+    //updates index for the shuffled list
+    this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
     
     //checks if its the last question
     if (this.questionIndex >= this.totalQuestions - 1) {
       this.isLastQuestion = true;
     } else {
       this.isLastQuestion = false;
-      //updates index for the shuffled list
-      this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
       console.log("Next song index:", this.currentSongIndex);
       this.loadQuestions();
     }
