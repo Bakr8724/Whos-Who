@@ -35,6 +35,8 @@ export class GameloopComponent implements OnInit {
   totalQuestions: number = 5;
   totalCorrectAnswers: number = 0;
   questionData: any[] = []; // Array to hold question data
+  playDisabled: boolean = false;
+  isPaused: boolean = false;
   
   playerScores: { [player: string]: number } = {}; // For coop mode
   currentPlayer: string = 'Player 1';  // Track current player
@@ -239,6 +241,7 @@ export class GameloopComponent implements OnInit {
       this.showChoices = true;
     }
     
+    this.playDisabled = true;
     // initialize Howler with the selected song preview
     this.player = new Howl({
       src: [song.previewUrl],
@@ -247,6 +250,7 @@ export class GameloopComponent implements OnInit {
       
       onend: () => {
         this.hasPlayed = false; // reset play state when song ends
+        this.isPaused = false;
       }
     });
     this.player.play();
@@ -260,15 +264,32 @@ export class GameloopComponent implements OnInit {
       }
     }, this.playBackDuration * 1000);
     
-    //disable the play button after the first play
     
   }
-  
+
+  canPlay(): boolean {
+    return !this.hasPlayed || this.isPaused;
+  }
+
   //pausing audio if its being played
   pauseAudio() {
     if (this.player && this.player.playing()) {
       this.player.pause();
+      this.isPaused = true;
     }
+
+  }
+  //WIP
+  resumeAudio(){
+    if(this.player && this.isPaused){
+      this.player.play();
+      this.isPaused = false;
+    }
+    setTimeout(() => {
+      if(this.player && this.player.playing()){
+        this.player.stop();
+      }
+    }, this.playBackDuration * 1000);
   }
   
   //as long as the replay available is more than 0 it replays, else it shouldnt. also -- replays
@@ -278,6 +299,12 @@ export class GameloopComponent implements OnInit {
       this.player.stop();
       this.player.play();
     }
+
+    setTimeout(() => {
+      if(this.player && this.player.playing()){
+        this.player.stop();
+      }
+    }, this.playBackDuration * 1000);
   }
 
 
@@ -344,22 +371,25 @@ export class GameloopComponent implements OnInit {
     
     this.questionIndex++;
     this.selectedChoice = '';
-    this.showChoices = false;
+    this.showChoices = true;
     this.replaysAvailable = 5;
     this.hasPlayed = false;
+    this.playDisabled = false;
     
     // Switch player in coop mode after each question
     if (this.gameMode === 'coop') {
       this.currentPlayer = this.currentPlayer === 'Player 1' ? 'Player 2' : 'Player 1';
     }
+
+
+    //updates index for the shuffled list
+    this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
     
     //checks if its the last question
     if (this.questionIndex >= this.totalQuestions - 1) {
       this.isLastQuestion = true;
     } else {
       this.isLastQuestion = false;
-      //updates index for the shuffled list
-      this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
       console.log("Next song index:", this.currentSongIndex);
       this.loadQuestions();
     }

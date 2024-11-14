@@ -9,10 +9,10 @@
   <div class="timer">Time: {{ timer }} sec</div>
 
   <div class="song-clip">
-    <button (click)="playAudio(currentSongIndex)">Play</button>
+    <button (click)="playAudio(currentSongIndex)" [disabled]="!canPlay()" (click)="resumeAudio()">Play</button>
     <div>{{ songs[currentSongIndex]?.name || 'Loading...' }}</div>
-    <button (click)="pauseAudio()">Pause</button>
-    <button (click)="replayAudio()">Replay</button>
+    <button (click)="pauseAudio()" >Pause</button>
+    <button (click)="replayAudio()" [disabled]="replaysAvailable <= 0">Replay</button>
   </div>
 
   <div class="audio-visualization" *ngIf="player && player.playing()">
